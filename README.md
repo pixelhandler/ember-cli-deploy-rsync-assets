@@ -47,7 +47,7 @@ Most likely the `ember-cli-deploy-rsync-assets` plugin will be used together
 with other deploy plugins, e.g. self-hosting your assets instead of
 using an S3 bucket.
 
-*See the options assigned to `ENV.rsync` in the example config below…*
+*See the options assigned to `ENV['rsync-assets']` in the example config below…*
 
 ```js
 /*jshint node:true*/
@@ -59,9 +59,9 @@ module.exports = function(deployTarget) {
   }
   var ENV = {};
   if (deployTarget === 'development-postbuild') {
-    ENV.plugins = ['rsync'];
+    ENV.plugins = ['rsync-assets'];
     ENV.build = { environment: 'development' };
-    ENV.rsync = {
+    ENV['rsync-assets'] = {
       destination: process.env['PUBLIC_DIR'],
       source: 'dist/.',
       excludeIndexHTML: false, // default is `true`
@@ -69,9 +69,9 @@ module.exports = function(deployTarget) {
       dry: false
     }
   } else if (deployTarget === 'production') {
-    ENV.plugins = 'build rsync'.split(' ');
+    ENV.plugins = 'build rsync-assets'.split(' ');
     ENV.build = { environment: 'production' };
-    ENV.rsync = {
+    ENV['rsync-assets'] = {
       destination: process.env['PUBLIC_DIR'],
       source: 'tmp/deploy-dist/.',
       excludeIndexHTML: false, // default is `true`
@@ -102,16 +102,16 @@ module.exports = function(defaults) {
 ```
 
 When using as a replacement for S3 in the lightning-pack you can add the options
-for `ENV.rsync` to your `config/deploy.js` file and also list the `plugins` to
+for `ENV['rsync-assets']` to your `config/deploy.js` file and also list the `plugins` to
 run during deployment.
 
 ```js
   if (deployTarget === 'development-postbuild') {
-    ENV.plugins = ['redis', 'rsync'];
-    // ... redis, rsync settings
+    ENV.plugins = ['redis', 'rsync-assets'];
+    // ... redis, rsync-assets settings
   } else if (deployTarget === 'production') {
-    ENV.plugins = 'build display-revisions gzip redis manifest revision-data rsync'.split(' ')
-    //... redis, ssh-tunnel, rsync settings…
+    ENV.plugins = 'build display-revisions gzip redis manifest revision-data rsync-assets'.split(' ')
+    //... redis, ssh-tunnel, rsync-assets settings…
   }
 ```
 
