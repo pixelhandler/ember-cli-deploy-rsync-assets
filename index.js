@@ -25,11 +25,11 @@ module.exports = {
         var rsync = this.command();
         return new Promise(function(resolve, reject) {
           rsync.execute(function(error, code, cmd) {
+            this.log('cmd: ' + cmd);
             if (error) {
               this.log(error);
               reject(new SilentError(error));
             } else {
-              this.log('cmd: ' + cmd);
               resolve();
             }
           }.bind(this), function(data) {
@@ -55,8 +55,12 @@ module.exports = {
         if (this.readConfig('dry')) {
           rsync.dry();
         } else if (this.readConfig('ssh')) {
-          rsync.shell('ssh');
-          rsync.flags('e');
+          var rsh = 'ssh';
+          var privateKeyPath = this.readConfig('privateKeyPath');
+          if (privateKeyPath) {
+            rsh = 'ssh -i ' + privateKeyPath;
+          }
+          rsync.shell(rsh);
         }
         return rsync;
       }

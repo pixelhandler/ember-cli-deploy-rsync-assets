@@ -27,18 +27,19 @@ ember-cli-deploy)
 
 |option|type|description|
 |:---|:---|:---|
-|destination|String|the destination include, `user@IP` if needed|
+|destination|String|The destination include, `user@IP` if needed|
 |source|String|The source directory|
-|ssh|Boolean|use SSH when syncing|
-|excludeIndexHTML|Boolean|exclude the `index.html` file default is `true`|
-|flags|Array|list of rsync flags to add, e.g. `['z']` to add compression|
-|dry|Boolean|option for dry run, does not connect w/ ssh|
+|ssh|Boolean|Use SSH when syncing|
+|privateKeyPath|String|Path to your private key, may need with `ssh` option|
+|excludeIndexHTML|Boolean|Exclude the `index.html` file, default is `true`|
+|flags|Array|List of rsync flags to add, e.g. `['z']` to add compression|
+|dry|Boolean|Option for dry run, does not connect when using ssh|
 
 The `destination` option can be a local path or a remote one. When using the
 `ssh` option be sure to include the user/domain, e.g.
 `username@remote_host:/path_to_public`. Also, if your config uses `ssh: true`
-you may need to use your local `~/.ssh/config` file to configure a path to your
-ssh key.
+you may need to also set the option for `privateKeyPath` to the path to your
+ssh key (`/Users/<username>/.ssh/id_rsa`).
 
 Below is an example `config/deploy.js` file setup to sync all the assets; and
 also includes the the option to sync the `index.html` file.
@@ -64,7 +65,7 @@ module.exports = function(deployTarget) {
     ENV['rsync-assets'] = {
       destination: process.env['PUBLIC_DIR'],
       source: 'dist/.',
-      excludeIndexHTML: false, // default is `true`
+      excludeIndexHTML: false, // default is `true` to exclude index.html
       ssh: false,
       dry: false
     }
@@ -74,9 +75,10 @@ module.exports = function(deployTarget) {
     ENV['rsync-assets'] = {
       destination: process.env['PUBLIC_DIR'],
       source: 'tmp/deploy-dist/.',
-      excludeIndexHTML: false, // default is `true`
+      excludeIndexHTML: false, // default is `true` to exclude index.html
       flags: ['z'], // compress, gzip
-      ssh: true
+      ssh: true,
+      privateKeyPath: process.env['PRIVATE_KEY_PATH']
     }
   }
   return ENV;
