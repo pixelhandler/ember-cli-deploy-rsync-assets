@@ -20,6 +20,10 @@ Requires `ember-cli-deploy` addon to be installed first
 
     ember install ember-cli-deploy-rsync-assets
 
+For production deployment the `build` plugin is required
+
+    ember install ember-cli-deploy-build
+
 ## Deploy config
 
 Setup your configuration in config/deploy.js (generated when installing
